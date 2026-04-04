@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emotion Detector</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #66d6ea, #ca6a8d);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            width: 900px;
+            max-width: 95%;
+            margin: auto;
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #ff7eb3;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ff4f9a;
+            transform: scale(1.05);
+        }
+
+        video, img {
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+            margin-top: 10px;
+        }
+
+        .video-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .result {
+            font-size: 22px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: rgba(255,255,255,0.3);
+            margin: 20px 0;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Emotion Detection 😄</h1>
+
+    <!-- Upload -->
+    <h3>Upload Image</h3>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button type="submit">Predict</button>
+    </form>
+
+    <hr>
+
+    <!-- Camera -->
+    <h3>Use Camera 📸</h3>
+
+    <div class="video-section">
+
+        <!-- Camera -->
+        <div>
+            <video id="video" width="350" height="250" autoplay></video><br>
+            <button onclick="capture()">Capture</button>
+        </div>
+
+        <!-- Captured Preview -->
+        <div>
+            <canvas id="canvas" width="300" height="200" style="display:none;"></canvas>
+            <img id="preview" width="300" style="display:none;" />
+
+            <form method="POST">
+                <input type="hidden" name="image_data" id="image_data">
+                <button type="submit">Predict</button>
+            </form>
+        </div>
+
+    </div>
+
+    <hr>
+
+    {% if file_path %}
+        <h3>Image:</h3>
+        <img src="{{ file_path }}" width="300">
+    {% endif %}
+
+    {% if emotion %}
+        <div class="result">
+            Detected Emotion: {{ emotion }}
+        </div>
+    {% endif %}
+
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const preview = document.getElementById('preview');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        });
+
+    function capture() {
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        context.drawImage(video, 0, 0, 300, 200);
+
+        const data = canvas.toDataURL('image/png');
+
+        // Show preview
+        preview.src = data;
+        preview.style.display = "block";
+
+        // Send to backend
+        document.getElementById('image_data').value = data;
+    }
+</script>
+
+</body>
+</html>
