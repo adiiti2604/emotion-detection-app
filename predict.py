@@ -1,10 +1,10 @@
-import cv2
-import numpy as np
-from keras.models import load_model
+# import cv2
+# import numpy as np
+# from keras.models import load_model
 
 # model = load_model('model/emotion_model.hdf5')
-model = None
-emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+# model = None
+# emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 # def predict_emotion(img_path):
 #     image = cv2.imread(img_path)
